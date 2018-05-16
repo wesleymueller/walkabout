@@ -4,7 +4,7 @@
   <solid>0</solid>
   <visible>-1</visible>
   <depth>0</depth>
-  <persistent>0</persistent>
+  <persistent>-1</persistent>
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
@@ -25,7 +25,9 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>///Initialize
+            <string>global.time = 1;
+global.paused = 0;
+global.debug = 0;
 </string>
           </argument>
         </arguments>
@@ -48,10 +50,14 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/// Any key - go to graybox
+            <string>/// Turn on Debug
 
-if keyboard_check_pressed(vk_anykey) {
-    room_goto(rm_graybox);
+if keyboard_check_pressed(vk_f12) {
+    if (global.debug == 1) {
+        global.debug = 0;
+    } else {
+        global.debug = 1;
+    }
 }
 </string>
           </argument>
@@ -75,11 +81,12 @@ if keyboard_check_pressed(vk_anykey) {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>draw_set_halign(fa_center);
-draw_set_valign(fa_middle);
+            <string>/// Debug
 
-draw_text(room_width / 2, room_height / 2, "New Game");
-draw_text(room_width / 2, room_height / 2 + 16, "Gray Box");
+if (global.debug) {
+    draw_text(16, 16, "hdir: " + string(obj_player.hdir));
+    draw_text(16, 36, "haxis" + string(gamepad_axis_value(0, gp_axislh)));
+}
 </string>
           </argument>
         </arguments>
