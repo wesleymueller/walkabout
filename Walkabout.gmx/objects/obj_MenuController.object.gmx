@@ -29,8 +29,10 @@
 
 global.menu[0, 0] = "New Game";
 global.menu[0, 1] = 0;
+
 global.menu[1, 0] = "Graybox";
 global.menu[1, 1] = 1;
+global.menu[1, 2] = rm_graybox;
 
 global.cursorPosition = 0;
 
@@ -67,15 +69,22 @@ gpaxis = gamepad_axis_value(0, gp_axislv);
 gadown = 0;
 gaup = 0;
 
-if gpaxis &gt; 0.1 {
+axishold = 0;
+
+if (gpaxis &gt; 0.1) &amp;&amp; (axishold == 0) {
+    axishold = 1;
     gaup = 1;
+
+    
 }
-if gpaxis &lt; -0.1 {
+if (gpaxis &lt; -0.1) &amp;&amp; (axishold == 0) {
+    axishold = 1;
     gadown = 1;
 }
 if (gpaxis &lt; 0.1) &amp;&amp; (gpaxis &gt; -0.1) {
     gaup = 0;
     gadown = 0;
+    axishold = 0;
 }
 
 if (gpdown || keydown || gadown) {
@@ -88,7 +97,37 @@ if (gpdown || keydown || gadown) {
 if (gpup || keyup || gaup) {
     global.cursorPosition--;
     if global.cursorPosition &lt; 0 {
-        global.cursorPosition = array_length_1d(global.menu);
+        global.cursorPosition = array_length_1d(global.menu) - 1;
+    }
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Select Menu Item
+
+gpSelectMenu = gamepad_button_check_pressed(0, gp_face1);
+keySelectMenu = keyboard_check_pressed(vk_enter);
+
+if gpSelectMenu || keySelectMenu {
+    if global.menu[global.cursorPosition, 1] = 1 {
+        room_goto(global.menu[global.cursorPosition, 2]);
     }
 }
 </string>
@@ -113,7 +152,9 @@ if (gpup || keyup || gaup) {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>draw_set_halign(fa_center);
+            <string>/// Draw Menu
+
+draw_set_halign(fa_center);
 draw_set_valign(fa_middle);
 
 for (i = 0; i &lt; array_length_1d(global.menu); i++) {

@@ -28,7 +28,7 @@
             <string>///Initialize Variables
 
 pad_haxis = 0;
-hsp = sprite_width / 4;
+hsp = sprite_width / 8;
 hdir = 0;
 left = 0;
 right = 0;
