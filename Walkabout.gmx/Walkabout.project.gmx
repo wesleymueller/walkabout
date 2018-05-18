@@ -6,10 +6,14 @@
   <NewExtensions/>
   <sounds name="sound"/>
   <sprites name="sprites">
+    <sprite>sprites\spr_TimeCopLeft</sprite>
+    <sprite>sprites\spr_TimeCopRight</sprite>
     <sprite>sprites\spr_PlayerLeft</sprite>
     <sprite>sprites\spr_PlayerRight</sprite>
     <sprite>sprites\spr_PlayerStanding</sprite>
     <sprite>sprites\spr_cursor</sprite>
+    <sprite>sprites\spr_interaction</sprite>
+    <sprite>sprites\spr_interacted</sprite>
   </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
@@ -17,6 +21,9 @@
     <object>objects\obj_MenuController</object>
     <object>objects\obj_player</object>
     <object>objects\obj_GameController</object>
+    <object>objects\obj_TimeCop</object>
+    <object>objects\obj_copSpawn</object>
+    <object>objects\obj_interactable</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_menu</room>

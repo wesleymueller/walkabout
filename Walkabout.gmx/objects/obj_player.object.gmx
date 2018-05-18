@@ -61,20 +61,21 @@ check_key_left = -keyboard_check(vk_left);
 check_key_right = keyboard_check(vk_right);
 check_pad_left = -gamepad_button_check(0, gp_padl);
 check_pad_right = gamepad_button_check(0, gp_padr);
-
-if (check_haxis &gt; 0.1) {
-    pad_haxis = 1;
-} 
-if (check_haxis &lt; -0.1) {
-    pad_haxis = -1;
+if !global.paused {
+    if (check_haxis &gt; 0.1) {
+        pad_haxis = 1;
+    } 
+    if (check_haxis &lt; -0.1) {
+        pad_haxis = -1;
+    }
+    if (-0.1 &lt; check_haxis) &amp;&amp;  (check_haxis &lt; 0.1) {
+        pad_haxis = 0;
+    }
+    
+    hdir = (check_pad_left + check_pad_right) + (check_key_left + check_key_right) + (pad_haxis)
+    if hdir &gt; 0 { hdir = 1;}
+    if hdir &lt; 0 { hdir = -1;}
 }
-if (-0.1 &lt; check_haxis) &amp;&amp;  (check_haxis &lt; 0.1) {
-    pad_haxis = 0;
-}
-
-hdir = (check_pad_left + check_pad_right) + (check_key_left + check_key_right) + (pad_haxis)
-if hdir &gt; 0 { hdir = 1;}
-if hdir &lt; 0 { hdir = -1;}
 </string>
           </argument>
         </arguments>
@@ -96,8 +97,9 @@ if hdir &lt; 0 { hdir = -1;}
           <argument>
             <kind>1</kind>
             <string>/// Move player
-
-x += hdir * hsp;
+if !global.paused {
+    x += hdir * hsp;
+}
 </string>
           </argument>
         </arguments>
@@ -131,6 +133,30 @@ if (hdir &gt; 0) {
 if (hdir == 0) {
     sprite_index = spr_PlayerStanding;
 }
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Interact
+
+gpInteract = gamepad_button_check_pressed(0, gp_face1);
+keyInteract = keyboard_check_pressed(vk_space);
 </string>
           </argument>
         </arguments>
