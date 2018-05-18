@@ -146,7 +146,7 @@ if (gpaxis &lt; 0.1) &amp;&amp; (gpaxis &gt; -0.1) {
     gadown = 0;
     axishold = 0;
 }
-if (global.interacting &amp;&amp; global.paused) {
+if (global.interacting &amp;&amp; global.paused) &amp;&amp; place_meeting(x, y, obj_player) {
     if (gpdown || keydown || gadown) {
         global.cursorPosition++;
         if global.cursorPosition &gt; array_length_1d(choices) - 1 {
@@ -189,7 +189,7 @@ if (interacted == 0) {
     draw_sprite(spr_interaction, 0, x, y);
 }
 
-if global.paused &amp;&amp; global.interacting {
+if global.paused &amp;&amp; global.interacting &amp;&amp; place_meeting(x, y, obj_player) {
     for (i = 0; i &lt; array_length_1d(choices); i++) {
         draw_set_halign(fa_left);
         draw_text(room_width / 2, room_height / 2 + (36 * i), choices[i]);

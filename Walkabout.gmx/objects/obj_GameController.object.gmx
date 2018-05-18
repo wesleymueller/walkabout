@@ -128,8 +128,9 @@ if (global.debug) {
     draw_set_halign(fa_left);
     draw_text(16, 16, "hdir: " + string(obj_player.hdir));
     draw_text(16, 16 * 2, "haxis: " + string(gamepad_axis_value(0, gp_axislh)));
-    draw_text(16, 16 * 3, "Spawn Timer: " + string(global.jumpTime));
-    draw_text(16, 16 * 4, "Interaction Timer: " + string(global.interactionTimer));
+    draw_text(16, 16 * 3, "hsp: " + string(obj_player.hsp));
+    draw_text(16, 16 * 4, "Spawn Timer: " + string(global.jumpTime));
+    draw_text(16, 16 * 5, "Interaction Timer: " + string(global.interactionTimer));
 }
 </string>
           </argument>
