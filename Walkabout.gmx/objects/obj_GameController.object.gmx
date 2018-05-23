@@ -35,6 +35,9 @@ global.jumpTime = 300;
 global.copSpawned = 0;
 
 global.paused = 0;
+global.barf = 0;
+global.barfTimerMax = room_speed * 1.5;
+global.barfTimer = 0;
 global.interacting = 0;
 global.interactionTimer = 0;
 
@@ -74,6 +77,9 @@ maxSpeed = sprite_get_width(spr_PlayerStanding) / 6;
 left = 0;
 right = 0;
 playerAccel = 5;
+
+global.playerx = 600;
+global.playery = room_height - (sprite_get_height(spr_PlayerStanding) / 2) - 10;
 </string>
           </argument>
         </arguments>
@@ -100,7 +106,12 @@ playerAccel = 5;
 
 if !global.startRoom {
     global.startRoom = 1;
-    instance_create(obj_PlayerSpawn.x, obj_PlayerSpawn.y, obj_player);
+    global.barf = 1;
+    global.barfTimer = global.barfTimerMax;
+    instance_create(global.playerx, global.playery, obj_player);
+    obj_player.sprite_index = spr_PlayerBarf;
+    view_xview[0] = (obj_player.x - (view_wview[0] / 2) - view_xview[0]);
+    view_xview[0] = clamp(view_xview[0], 0, room_width - view_wview[0]);
 }
 </string>
           </argument>
@@ -196,7 +207,7 @@ if !global.paused {
           <argument>
             <kind>1</kind>
             <string>/// Move player
-if !global.paused {
+if !global.paused &amp;&amp; !global.barf {
 
     if (hdir != 0) {
         moveSpeed += playerAccel * hdir
@@ -208,10 +219,15 @@ if !global.paused {
     }
     
     obj_player.x += moveSpeed;
+    global.playerx = obj_player.x;
     
     obj_player.x = clamp(obj_player.x, (obj_player.sprite_width / 2) + 100, room_width - (obj_player.sprite_width / 2) - 100)
 
 }
+
+if global.barf {
+    moveSpeed = 0;
+}  
 </string>
           </argument>
         </arguments>
@@ -234,17 +250,20 @@ if !global.paused {
             <kind>1</kind>
             <string>/// Set sprite
 
-if (hdir &lt; 0) {
-    obj_player.sprite_index = spr_PlayerLeft;
+if !global.paused &amp;&amp; !global.barf {
+    if (hdir &lt; 0) {
+        obj_player.sprite_index = spr_PlayerLeft;
+    }
+    
+    if (hdir &gt; 0) {
+        obj_player.sprite_index = spr_PlayerRight;
+    }
+    
+    if (hdir == 0) {
+        obj_player.sprite_index = spr_PlayerStanding;
+    }
 }
 
-if (hdir &gt; 0) {
-    obj_player.sprite_index = spr_PlayerRight;
-}
-
-if (hdir == 0) {
-    obj_player.sprite_index = spr_PlayerStanding;
-}
 </string>
           </argument>
         </arguments>
@@ -275,10 +294,10 @@ key_Future = keyboard_check_pressed(ord('C'));
 if !global.paused {
     if (global.teleportCooldown == 0) {
         if (gp_Past || key_Past) {
-            global.teleportCooldown = global.maxCoolDown
             switch (room) {
                 case rm_graybox:    
-                    room_goto(rm_graybox_past)
+                    global.teleportCooldown = global.maxCoolDown;
+                    room_goto(rm_graybox_past);
                     break;
                 case rm_graybox_past: 
                     break;
@@ -286,11 +305,11 @@ if !global.paused {
         }
         
         if (gp_Future || key_Future) {
-            global.teleportCooldown = global.maxCoolDown
             switch (room) {
                 case rm_graybox:    
                     break;
                 case rm_graybox_past: 
+                    global.teleportCooldown = global.maxCoolDown;
                     room_goto(rm_graybox);
                     break;
             }
@@ -359,6 +378,36 @@ view_xview[0] = clamp(view_xview[0], 0, room_width - view_wview[0]);
           </argument>
         </arguments>
       </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Barf
+
+if (global.barfTimer &gt; 0) {
+    global.barfTimer--
+    global.barfTimer = clamp(global.barfTimer, 0, global.barfTimerMax);
+    if (global.barfTimer &lt;= 0) {
+        global.barf = 0;
+        obj_player.sprite_index = spr_PlayerStanding;
+    }
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
     </event>
     <event eventtype="8" enumb="64">
       <action>
@@ -396,7 +445,7 @@ if (global.debug) {
     draw_text(view_wview - 16, 16 * 3, "Past Gamepad: " + string(gp_Past));
     draw_text(view_wview - 16, 16 * 4, "Past Keyboard: " + string(key_Past));
     draw_text(view_wview - 16, 16 * 5, "Future Gamepad: " + string(gp_Future));
-    draw_text(view_wview - 16, 16 * 9, "Future Keyboard: " + string(key_Future));
+    draw_text(view_wview - 16, 16 * 6, "Future Keyboard: " + string(key_Future));
 }
 </string>
           </argument>

@@ -11,6 +11,7 @@
     <sprite>sprites\spr_PlayerRight</sprite>
     <sprite>sprites\spr_PlayerLeft</sprite>
     <sprite>sprites\spr_PlayerStanding</sprite>
+    <sprite>sprites\spr_PlayerBarf</sprite>
     <sprite>sprites\spr_cursor</sprite>
     <sprite>sprites\spr_interaction</sprite>
     <sprite>sprites\spr_interacted</sprite>
