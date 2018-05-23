@@ -350,8 +350,8 @@ if (global.debug) {
     draw_text(16, 16 * 6, "Teleport Cooldown: " + string(global.teleportCooldown));
     draw_text(16, 16 * 9, "Room: " + string(room));
     draw_set_halign(fa_right);
-    draw_text(room_width - 16, 16, "Interact Gamepad: " + string(gpInteract));
-    draw_text(room_width - 16, 16 * 2, "Interact Keyboard: " + string(keyInteract));
+    draw_text(room_width - 16, 16, "Interact Gamepad: " + string(obj_interactable.gpInteract));
+    draw_text(room_width - 16, 16 * 2, "Interact Keyboard: " + string(obj_interactable.keyInteract));
     draw_text(room_width - 16, 16 * 3, "Past Gamepad: " + string(gp_Past));
     draw_text(room_width - 16, 16 * 4, "Past Keyboard: " + string(key_Past));
     draw_text(room_width - 16, 16 * 5, "Future Gamepad: " + string(gp_Future));
@@ -378,9 +378,6 @@ if (global.debug) {
           <argument>
             <kind>1</kind>
             <string>/// Interaction
-
-gpInteract = gamepad_button_check_pressed(0, gp_face1);
-keyInteract = keyboard_check_pressed(vk_space);
 
 if global.paused &amp;&amp; global.interacting {
     draw_text(room_width / 2, 36, global.interactionText);

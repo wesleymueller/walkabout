@@ -6,8 +6,8 @@
   <NewExtensions/>
   <sounds name="sound"/>
   <sprites name="sprites">
-    <sprite>sprites\spr_TimeCopLeft</sprite>
     <sprite>sprites\spr_TimeCopRight</sprite>
+    <sprite>sprites\spr_TimeCopLeft</sprite>
     <sprite>sprites\spr_PlayerRight</sprite>
     <sprite>sprites\spr_PlayerLeft</sprite>
     <sprite>sprites\spr_PlayerStanding</sprite>
@@ -15,7 +15,10 @@
     <sprite>sprites\spr_interaction</sprite>
     <sprite>sprites\spr_interacted</sprite>
   </sprites>
-  <backgrounds name="background"/>
+  <backgrounds name="background">
+    <background>background\bg_Graybox</background>
+    <background>background\bg_graybox_past</background>
+  </backgrounds>
   <paths name="paths"/>
   <objects name="objects">
     <object>objects\obj_MenuController</object>

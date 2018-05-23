@@ -84,20 +84,20 @@ keyInteract = keyboard_check_pressed(vk_space);
 
 if place_meeting(x, y, obj_player) {
     if (gpInteract || keyInteract) &amp;&amp; (interacted == 0) {
+        global.interactionTimer = 30;
         interacted = 1;
-        global.cursorPosition = 0;
-        sprite_index = spr_interacted;
         global.interacting = 1;
         global.paused = 1;
-        global.interactionTimer = 30;
+        global.cursorPosition = 0;
+        sprite_index = spr_interacted;
         global.interactionText = interactionText;
     }
 }
 
 if (gpInteract || keyInteract) &amp;&amp; (global.interactionTimer != 0) &amp;&amp; (interacted == 1) {
-    	global.paused = 0;
-    	global.interacting = 0;
-    	global.interactionText = "";
+    global.paused = 0;
+    global.interacting = 0;
+    global.interactionText = "";
 }
 </string>
           </argument>
