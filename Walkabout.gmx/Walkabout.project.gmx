@@ -20,6 +20,7 @@
   <objects name="objects">
     <object>objects\obj_MenuController</object>
     <object>objects\obj_player</object>
+    <object>objects\obj_PlayerSpawn</object>
     <object>objects\obj_GameController</object>
     <object>objects\obj_TimeCop</object>
     <object>objects\obj_copSpawn</object>
@@ -28,6 +29,7 @@
   <rooms name="rooms">
     <room>rooms\rm_menu</room>
     <room>rooms\rm_graybox</room>
+    <room>rooms\rm_graybox_past</room>
   </rooms>
   <help>
     <rtf>help.rtf</rtf>

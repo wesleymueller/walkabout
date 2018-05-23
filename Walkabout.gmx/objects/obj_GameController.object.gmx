@@ -40,12 +40,69 @@ global.interactionTimer = 0;
 
 global.interactionText = "";
 
+global.maxCoolDown = 300;
+global.teleportCooldown = 300;
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>///Initialize Player Variables
+
+pad_haxis = 0;
+hsp = sprite_get_width(spr_PlayerStanding) / 6;
+hdir = 0;
+moveSpeed = 0;
+left = 0;
+right = 0;
 </string>
           </argument>
         </arguments>
       </action>
     </event>
     <event eventtype="3" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Start Room
+
+if !global.startRoom {
+    global.startRoom = 1;
+    instance_create(obj_PlayerSpawn.x, obj_PlayerSpawn.y, obj_player);
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -69,6 +126,165 @@ if keyboard_check_pressed(vk_f12) {
         global.debug = 0;
     } else {
         global.debug = 1;
+    }
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Check for input
+
+check_haxis = gamepad_axis_value(0, gp_axislh);
+check_key_left = -keyboard_check(vk_left);
+check_key_right = keyboard_check(vk_right);
+check_pad_left = -gamepad_button_check(0, gp_padl);
+check_pad_right = gamepad_button_check(0, gp_padr);
+
+
+if !global.paused {
+    if (check_haxis &gt; 0.1) {
+        pad_haxis = 1;
+    } 
+    if (check_haxis &lt; -0.1) {
+        pad_haxis = -1;
+    }
+    if (-0.1 &lt; check_haxis) &amp;&amp;  (check_haxis &lt; 0.1) {
+        pad_haxis = 0;
+    }
+    
+    hdir = (check_pad_left + check_pad_right) + (check_key_left + check_key_right) + (pad_haxis)
+    if hdir &gt; 0 { hdir = 1;}
+    if hdir &lt; 0 { hdir = -1;}
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Move player
+if !global.paused {
+    moveSpeed = hdir * hsp;
+    obj_player.x += moveSpeed;
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Set sprite
+
+if (hdir &lt; 0) {
+    obj_player.sprite_index = spr_PlayerLeft;
+}
+
+if (hdir &gt; 0) {
+    obj_player.sprite_index = spr_PlayerRight;
+}
+
+if (hdir == 0) {
+    obj_player.sprite_index = spr_PlayerStanding;
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Time Travel
+
+gp_Past = gamepad_button_check_pressed(0, gp_face2);
+gp_Future = gamepad_button_check_pressed(0, gp_face3);
+key_Past = keyboard_check_pressed(ord('X'));
+key_Future = keyboard_check_pressed(ord('C'));
+
+if !global.paused {
+    if (global.teleportCooldown == 0) {
+        if (gp_Past || key_Past) {
+            global.teleportCooldown = global.maxCoolDown
+            switch (room) {
+                case rm_graybox:    
+                    room_goto(rm_graybox_past)
+                    break;
+                case rm_graybox_past: 
+                    break;
+            }
+        }
+        
+        if (gp_Future || key_Future) {
+            global.teleportCooldown = global.maxCoolDown
+            switch (room) {
+                case rm_graybox:    
+                    break;
+                case rm_graybox_past: 
+                    room_goto(rm_graybox);
+                    break;
+            }
+        }
+    } else {
+        global.teleportCooldown--;
+        if global.teleportCooldown &lt; 0 {
+            global.teleportCooldown = 0;
+        }
     }
 }
 </string>
@@ -126,11 +342,20 @@ if (global.paused == 0) &amp;&amp; (global.jumpTime &gt; 0) {
 
 if (global.debug) {
     draw_set_halign(fa_left);
-    draw_text(16, 16, "hdir: " + string(obj_player.hdir));
+    draw_text(16, 16, "hdir: " + string(hdir));
     draw_text(16, 16 * 2, "haxis: " + string(gamepad_axis_value(0, gp_axislh)));
-    draw_text(16, 16 * 3, "hsp: " + string(obj_player.hsp));
+    draw_text(16, 16 * 3, "hsp: " + string(hsp));
     draw_text(16, 16 * 4, "Spawn Timer: " + string(global.jumpTime));
     draw_text(16, 16 * 5, "Interaction Timer: " + string(global.interactionTimer));
+    draw_text(16, 16 * 6, "Teleport Cooldown: " + string(global.teleportCooldown));
+    draw_text(16, 16 * 9, "Room: " + string(room));
+    draw_set_halign(fa_right);
+    draw_text(room_width - 16, 16, "Interact Gamepad: " + string(gpInteract));
+    draw_text(room_width - 16, 16 * 2, "Interact Keyboard: " + string(keyInteract));
+    draw_text(room_width - 16, 16 * 3, "Past Gamepad: " + string(gp_Past));
+    draw_text(room_width - 16, 16 * 4, "Past Keyboard: " + string(key_Past));
+    draw_text(room_width - 16, 16 * 5, "Future Gamepad: " + string(gp_Future));
+    draw_text(room_width - 16, 16 * 9, "Future Keyboard: " + string(key_Future));
 }
 </string>
           </argument>

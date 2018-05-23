@@ -76,9 +76,10 @@ if global.interactionTimer &gt; 0 {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/// Interaction
+            <string>/// Interaction 
 
 gpInteract = gamepad_button_check_pressed(0, gp_face1);
+
 keyInteract = keyboard_check_pressed(vk_space);
 
 if place_meeting(x, y, obj_player) {
@@ -91,13 +92,12 @@ if place_meeting(x, y, obj_player) {
         global.interactionTimer = 30;
         global.interactionText = interactionText;
     }
-    
 }
 
-if (gpInteract || keyInteract) &amp;&amp; (global.interactionTimer &lt;= 0) &amp;&amp; interacted = 1 {
-    global.paused = 0;
-    global.interacting = 0;
-    global.interactionText = "";
+if (gpInteract || keyInteract) &amp;&amp; (global.interactionTimer != 0) &amp;&amp; (interacted == 1) {
+    	global.paused = 0;
+    	global.interacting = 0;
+    	global.interactionText = "";
 }
 </string>
           </argument>
