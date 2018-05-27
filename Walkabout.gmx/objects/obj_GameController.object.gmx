@@ -80,6 +80,8 @@ playerAccel = 5;
 
 global.playerx = 600;
 global.playery = room_height - (sprite_get_height(spr_PlayerStanding) / 2) - 10;
+global.teleporting = 0;
+global.teleportDirection = 0;
 </string>
           </argument>
         </arguments>
@@ -107,6 +109,7 @@ global.playery = room_height - (sprite_get_height(spr_PlayerStanding) / 2) - 10;
 if !global.startRoom {
     //script_execute(scr_ScaleBestFit);
     global.startRoom = 1;
+    global.teleporting = 0;
     global.barf = 1;
     global.barfTimer = global.barfTimerMax;
     instance_create(global.playerx, global.playery, obj_player);
@@ -251,7 +254,7 @@ if global.barf {
             <kind>1</kind>
             <string>/// Set sprite
 
-if !global.paused &amp;&amp; !global.barf {
+if !global.paused &amp;&amp; !global.barf &amp;&amp; !global.teleporting {
     if (hdir &lt; 0) {
         obj_player.sprite_index = spr_PlayerLeft;
     }
@@ -265,6 +268,9 @@ if !global.paused &amp;&amp; !global.barf {
     }
 }
 
+if global.teleporting {
+    obj_player.sprite_index = spr_Teleport;    
+}
 </string>
           </argument>
         </arguments>
@@ -294,7 +300,27 @@ key_Future = keyboard_check_pressed(ord('C'));
 
 if !global.paused {
     if (global.teleportCooldown == 0) {
-        if (gp_Past || key_Past) {
+            if (gp_Past || key_Past) {
+                global.teleporting = 1;
+                global.teleportDirection = -1;
+        }
+        
+        if (gp_Future || key_Future) {
+            global.teleporting = 1;
+            global.teleportDirection = 1;
+        }
+    } else {
+        global.teleportCooldown--;
+        if global.teleportCooldown &lt; 0 {
+            global.teleportCooldown = 0;
+        }
+    }
+}
+if (global.teleporting &amp;&amp; obj_player.sprite_index == spr_Teleport) {
+    hdir = 0;
+    if (obj_player.image_index &gt;= obj_player.image_number - 1) {
+        if (global.teleportDirection == -1) {
+            global.teleportDirection = 0;
             switch (room) {
                 case rm_graybox:    
                     global.teleportCooldown = global.maxCoolDown;
@@ -305,20 +331,16 @@ if !global.paused {
             }
         }
         
-        if (gp_Future || key_Future) {
+        if (global.teleportDirection == 1) {
+            global.teleportDirection = 0;
             switch (room) {
-                case rm_graybox:    
-                    break;
-                case rm_graybox_past: 
-                    global.teleportCooldown = global.maxCoolDown;
-                    room_goto(rm_graybox);
-                    break;
+                    case rm_graybox:    
+                        break;
+                    case rm_graybox_past: 
+                        global.teleportCooldown = global.maxCoolDown;
+                        room_goto(rm_graybox);
+                        break;
             }
-        }
-    } else {
-        global.teleportCooldown--;
-        if global.teleportCooldown &lt; 0 {
-            global.teleportCooldown = 0;
         }
     }
 }

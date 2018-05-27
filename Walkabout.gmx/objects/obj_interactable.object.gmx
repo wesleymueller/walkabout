@@ -85,9 +85,9 @@ keyInteract = keyboard_check_pressed(vk_space);
 if place_meeting(x, y, obj_player) {
     if (gpInteract || keyInteract) &amp;&amp; (interacted == 0) {
         global.interactionTimer = 30;
-        interacted = 1;
         global.interacting = 1;
         global.paused = 1;
+        interacted = 1;
         global.cursorPosition = 0;
         sprite_index = spr_interacted;
         global.interactionText = interactionText;
@@ -184,6 +184,7 @@ if (global.interacting &amp;&amp; global.paused) &amp;&amp; place_meeting(x, y, 
           <argument>
             <kind>1</kind>
             <string>/// Dialog choice
+draw_set_font(font_ISO400);
 
 if (interacted == 0) {
     draw_sprite(spr_interaction, 0, x, y);

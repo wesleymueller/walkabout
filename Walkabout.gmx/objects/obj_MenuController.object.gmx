@@ -37,6 +37,7 @@ global.menu[1, 2] = rm_graybox;
 global.cursorPosition = 0;
 
 global.menuHeight = 36;
+draw_set_font(font_ISO400)
 </string>
           </argument>
         </arguments>
