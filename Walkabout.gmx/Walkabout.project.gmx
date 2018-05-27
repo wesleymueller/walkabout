@@ -21,6 +21,9 @@
     <background>background\bg_graybox_past</background>
   </backgrounds>
   <paths name="paths"/>
+  <scripts name="scripts">
+    <script>scripts\scr_ScaleCanvas.gml</script>
+  </scripts>
   <objects name="objects">
     <object>objects\obj_MenuController</object>
     <object>objects\obj_player</object>
@@ -29,6 +32,7 @@
     <object>objects\obj_TimeCop</object>
     <object>objects\obj_copSpawn</object>
     <object>objects\obj_interactable</object>
+    <object>objects\obj_ScaleController</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_menu</room>
