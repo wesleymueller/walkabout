@@ -11,15 +11,25 @@
     <sprite>sprites\spr_PlayerRight</sprite>
     <sprite>sprites\spr_PlayerLeft</sprite>
     <sprite>sprites\spr_PlayerStanding</sprite>
-    <sprite>sprites\spr_Teleport</sprite>
+    <sprite>sprites\spr_PlayerStandingLeft</sprite>
+    <sprite>sprites\spr_PlayerStandingRight</sprite>
+    <sprite>sprites\spr_TeleportRight</sprite>
+    <sprite>sprites\spr_TeleportLeft</sprite>
     <sprite>sprites\spr_PlayerBarf</sprite>
     <sprite>sprites\spr_cursor</sprite>
     <sprite>sprites\spr_interaction</sprite>
     <sprite>sprites\spr_interacted</sprite>
+    <sprite>sprites\spr_playerSpeechLeft</sprite>
+    <sprite>sprites\spr_playerSpeechRight</sprite>
+    <sprite>sprites\spr_promptBubbleRight</sprite>
+    <sprite>sprites\spr_promptBubbleLeft</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\bg_Graybox</background>
     <background>background\bg_graybox_past</background>
+    <background>background\bg_contemporary</background>
+    <background>background\bg_nearpast</background>
+    <background>background\bg_distantpast</background>
   </backgrounds>
   <paths name="paths"/>
   <scripts name="scripts">
@@ -32,16 +42,19 @@
     <object>objects\obj_MenuController</object>
     <object>objects\obj_player</object>
     <object>objects\obj_PlayerSpawn</object>
-    <object>objects\obj_GameController</object>
     <object>objects\obj_TimeCop</object>
     <object>objects\obj_copSpawn</object>
     <object>objects\obj_interactable</object>
     <object>objects\obj_ScaleController</object>
+    <object>objects\obj_GameController</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_menu</room>
     <room>rooms\rm_graybox</room>
     <room>rooms\rm_graybox_past</room>
+    <room>rooms\rm_contemporary</room>
+    <room>rooms\rm_nearpast</room>
+    <room>rooms\rm_distantpast</room>
   </rooms>
   <help>
     <rtf>help.rtf</rtf>

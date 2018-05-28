@@ -40,6 +40,7 @@ global.barfTimerMax = room_speed * 1.5;
 global.barfTimer = 0;
 global.interacting = 0;
 global.interactionTimer = 0;
+global.interactionTimerMax = 30;
 
 global.interactionText = "";
 
@@ -47,6 +48,21 @@ global.maxCoolDown = 300;
 global.teleportCooldown = 300;
 
 cameraAccel = 0.12
+
+global.rooms[0] = rm_contemporary;
+global.rooms[1] = rm_nearpast;
+global.rooms[2] = rm_distantpast;
+global.currentRoom = 0;
+
+global.bubbleY = 523;
+global.textY = 119;
+global.bubbleX = 66;
+global.textX = 4;
+
+global.interactBubbleY = 550;
+global.interactTextY = 30;
+global.interactBubbleX = -309;
+global.interactTextX = 365;
 </string>
           </argument>
         </arguments>
@@ -77,9 +93,10 @@ maxSpeed = sprite_get_width(spr_PlayerStanding) / 6;
 left = 0;
 right = 0;
 playerAccel = 5;
+lastSpeed = 0;
 
 global.playerx = 600;
-global.playery = room_height - (sprite_get_height(spr_PlayerStanding) / 2) - 10;
+global.playery = room_height - (sprite_get_height(spr_PlayerStanding) / 2) + 20;
 global.teleporting = 0;
 global.teleportDirection = 0;
 </string>
@@ -107,8 +124,14 @@ global.teleportDirection = 0;
             <string>/// Start Room
 
 if !global.startRoom {
-    //script_execute(scr_ScaleBestFit);
     global.startRoom = 1;
+    
+    for (i = 0; i &lt; array_length_1d(global.rooms); i++) {
+        if (string(global.rooms[i]) == string(room)) {
+            global.currentRoom = i;
+        }
+    }
+    global.teleportDirection = 0;
     global.teleporting = 0;
     global.barf = 1;
     global.barfTimer = global.barfTimerMax;
@@ -145,6 +168,68 @@ if keyboard_check_pressed(vk_f12) {
     } else {
         global.debug = 1;
     }
+}
+
+
+// Y
+
+// Choices
+if keyboard_check(vk_alt) &amp;&amp; !keyboard_check(vk_shift) {
+    global.bubbleY++;
+}
+if keyboard_check(vk_alt) &amp;&amp; keyboard_check(vk_shift) {
+    global.bubbleY--;
+}
+
+if keyboard_check(vk_control) &amp;&amp; !keyboard_check(vk_shift) {
+    global.textY++;
+}
+if keyboard_check(vk_control) &amp;&amp; keyboard_check(vk_shift) {
+    global.textY--;
+}
+// Prompt
+if keyboard_check(ord('O')) &amp;&amp; !keyboard_check(vk_shift) {
+    global.interactBubbleY++;
+}
+if keyboard_check(ord('O')) &amp;&amp; keyboard_check(vk_shift) {
+    global.interactBubbleY--;
+}
+
+if keyboard_check(ord('P')) &amp;&amp; !keyboard_check(vk_shift) {
+    global.interactTextY++;
+}
+if keyboard_check(ord('P')) &amp;&amp; keyboard_check(vk_shift) {
+    global.interactTextY--;
+}
+
+// X
+if keyboard_check(ord('W')) &amp;&amp; !keyboard_check(vk_shift) {
+    global.bubbleX++;
+}
+if keyboard_check(ord('W')) &amp;&amp; keyboard_check(vk_shift) {
+    global.bubbleX--;
+}
+
+if keyboard_check(ord('Q')) &amp;&amp; !keyboard_check(vk_shift) {
+    global.textX++;
+}
+if keyboard_check(ord('Q')) &amp;&amp; keyboard_check(vk_shift) {
+    global.textX--;
+}
+
+// Prompt
+if keyboard_check(ord('N')) &amp;&amp; !keyboard_check(vk_shift) {
+    global.interactBubbleX++;
+}
+if keyboard_check(ord('N')) &amp;&amp; keyboard_check(vk_shift) {
+    global.interactBubbleX--;
+}
+
+if keyboard_check(ord('M')) &amp;&amp; !keyboard_check(vk_shift) {
+    global.interactTextX++;
+}
+if keyboard_check(ord('M')) &amp;&amp; keyboard_check(vk_shift) {
+    global.interactTextX--;
 }
 </string>
           </argument>
@@ -219,13 +304,19 @@ if !global.paused &amp;&amp; !global.barf {
     }
     
     if (hdir == 0) {
+        lastSpeed = moveSpeed;
         moveSpeed -= playerAccel * sign(moveSpeed);
+        if (moveSpeed != 0) &amp;&amp; (sign(moveSpeed) != sign(lastSpeed)) {
+            moveSpeed = 0;
+        }
+        
     }
-    
+    moveSpeed = round(moveSpeed);
+    lastSpeed = moveSpeed;
     obj_player.x += moveSpeed;
     global.playerx = obj_player.x;
     
-    obj_player.x = clamp(obj_player.x, (obj_player.sprite_width / 2) + 100, room_width - (obj_player.sprite_width / 2) - 100)
+    obj_player.x = clamp(obj_player.x, (obj_player.sprite_width / 2), room_width - (obj_player.sprite_width / 2))
 
 }
 
@@ -264,12 +355,33 @@ if !global.paused &amp;&amp; !global.barf &amp;&amp; !global.teleporting {
     }
     
     if (hdir == 0) {
-        obj_player.sprite_index = spr_PlayerStanding;
+        if lastSpeed &lt; 0 {
+            obj_player.sprite_index = spr_PlayerStandingLeft;   
+        }
+        if lastSpeed &gt; 0 {
+            obj_player.sprite_index = spr_PlayerStandingRight;   
+        }
+    }
+    if (sign(lastSpeed) != sign(hdir)) {
+        if (hdir == -1) {
+            obj_player.sprite_index = spr_PlayerStandingRight; 
+        }
+        if (hdir == 1) {
+            obj_player.sprite_index = spr_PlayerStandingLeft;
+        }
     }
 }
 
 if global.teleporting {
-    obj_player.sprite_index = spr_Teleport;    
+    if lastSpeed &lt; 0 {
+        obj_player.sprite_index = spr_TeleportLeft;   
+    }
+    if lastSpeed &gt; 0 {
+        obj_player.sprite_index = spr_TeleportRight;   
+    }
+    if lastSpeed == 0 {
+        obj_player.sprite_index = spr_TeleportRight;
+    }
 }
 </string>
           </argument>
@@ -300,15 +412,21 @@ key_Future = keyboard_check_pressed(ord('C'));
 
 if !global.paused {
     if (global.teleportCooldown == 0) {
-            if (gp_Past || key_Past) {
+        
+        if (gp_Past || key_Past) {
+            global.teleportDirection = -1;
+            if !((global.currentRoom + global.teleportDirection &gt; 2) || (global.currentRoom + global.teleportDirection &lt; 0)) {
                 global.teleporting = 1;
-                global.teleportDirection = -1;
+            }
         }
         
         if (gp_Future || key_Future) {
-            global.teleporting = 1;
             global.teleportDirection = 1;
+            if !((global.currentRoom + global.teleportDirection &gt; 2) || (global.currentRoom + global.teleportDirection &lt; 0)) {
+                global.teleporting = 1;
+            }
         }
+        
     } else {
         global.teleportCooldown--;
         if global.teleportCooldown &lt; 0 {
@@ -316,31 +434,13 @@ if !global.paused {
         }
     }
 }
-if (global.teleporting &amp;&amp; obj_player.sprite_index == spr_Teleport) {
+if (global.teleportDirection != 0) &amp;&amp; ((obj_player.sprite_index == spr_TeleportLeft) || (obj_player.sprite_index == spr_TeleportRight)) {
     hdir = 0;
     if (obj_player.image_index &gt;= obj_player.image_number - 1) {
-        if (global.teleportDirection == -1) {
-            global.teleportDirection = 0;
-            switch (room) {
-                case rm_graybox:    
-                    global.teleportCooldown = global.maxCoolDown;
-                    room_goto(rm_graybox_past);
-                    break;
-                case rm_graybox_past: 
-                    break;
-            }
-        }
         
-        if (global.teleportDirection == 1) {
-            global.teleportDirection = 0;
-            switch (room) {
-                    case rm_graybox:    
-                        break;
-                    case rm_graybox_past: 
-                        global.teleportCooldown = global.maxCoolDown;
-                        room_goto(rm_graybox);
-                        break;
-            }
+        if !((global.currentRoom + global.teleportDirection &gt; 2) || (global.currentRoom + global.teleportDirection &lt; 0)) {
+            global.teleportCooldown = global.maxCoolDown;
+            room_goto(global.rooms[global.currentRoom + global.teleportDirection]);
         }
     }
 }
@@ -431,6 +531,31 @@ if (global.barfTimer &gt; 0) {
           </argument>
         </arguments>
       </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Exit Game
+
+if keyboard_check(vk_escape) {
+    game_end();
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
     </event>
     <event eventtype="8" enumb="64">
       <action>
@@ -452,6 +577,7 @@ if (global.barfTimer &gt; 0) {
             <string>/// Debug
 
 if (global.debug) {
+    draw_set_color(c_black)
     draw_set_halign(fa_left);
     draw_text(16, 16, "hdir: " + string(hdir));
     draw_text(16, 16 * 2, "haxis: " + string(gamepad_axis_value(0, gp_axislh)));
@@ -469,6 +595,20 @@ if (global.debug) {
     draw_text(view_wview - 16, 16 * 4, "Past Keyboard: " + string(key_Past));
     draw_text(view_wview - 16, 16 * 5, "Future Gamepad: " + string(gp_Future));
     draw_text(view_wview - 16, 16 * 6, "Future Keyboard: " + string(key_Future));
+    draw_text(view_wview - 16, 16 * 7, "Bubble Y: " + string(global.bubbleY));
+    draw_text(view_wview - 16, 16 * 8, "Text Y: " + string(global.textY));
+    draw_text(view_wview - 16, 16 * 9, "Bubble X: " + string(global.bubbleX));
+    draw_text(view_wview - 16, 16 * 10, "Text X: " + string(global.textX));
+    draw_text(view_wview - 16, 16 * 11, "IA Bubble Y: " + string(global.interactBubbleY));
+    draw_text(view_wview - 16, 16 * 12, "IA Text Y: " + string(global.interactTextY));
+    draw_text(view_wview - 16, 16 * 13, "IA Bubble X: " + string(global.interactBubbleX));
+    draw_text(view_wview - 16, 16 * 14, "IA X: " + string(global.interactTextX));
+    
+    draw_set_halign(fa_center);
+    draw_set_color(c_red)
+    draw_text(view_wview / 2, 16, "ROOM: " + string(global.currentRoom));
+    draw_set_color(c_white)
+    draw_text((view_wview / 2) - 2, 14, "ROOM: " + string(global.currentRoom));
 }
 </string>
           </argument>
@@ -492,9 +632,20 @@ if (global.debug) {
             <kind>1</kind>
             <string>/// Interaction
 
+dialogPosition = sign(global.playerx - view_xview[0]);
+
+/*
 if global.paused &amp;&amp; global.interacting {
-    draw_text(room_width / 2, 36, global.interactionText);
+    if dialogPosition == 1 {
+        draw_sprite(spr_playerSpeechLeft, 0, global.playerx + (dialogPosition * global.bubbleX), global.bubbleY);
+    }
+    if dialogPosition == -1 {
+        draw_sprite(spr_playerSpeechRight, 0, global.playerx + (dialogPosition * global.bubbleX), global.bubbleY);
+    }
+    
+    draw_text(global.playerx + (dialogPosition * global.textX), global.playery - (sprite_get_height(spr_PlayerStandingRight) / 2) - global.textY, global.interactionText);
 }
+*/
 </string>
           </argument>
         </arguments>

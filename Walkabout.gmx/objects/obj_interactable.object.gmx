@@ -3,7 +3,7 @@
   <spriteName>spr_interaction</spriteName>
   <solid>0</solid>
   <visible>-1</visible>
-  <depth>0</depth>
+  <depth>-10000</depth>
   <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
@@ -25,7 +25,9 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>interacted = 0;
+            <string>/// Initialize variables
+
+interacted = 0;
 </string>
           </argument>
         </arguments>
@@ -52,9 +54,7 @@
 
 if global.interactionTimer &gt; 0 {
     global.interactionTimer--;
-    if global.interactionTimer &lt; 0 { 
-        global.interactionTimer = 0;
-    }
+    global.interactionTimer = clamp(global.interactionTimer, 0, global.interactionTimerMax)
 }
 </string>
           </argument>
@@ -84,17 +84,17 @@ keyInteract = keyboard_check_pressed(vk_space);
 
 if place_meeting(x, y, obj_player) {
     if (gpInteract || keyInteract) &amp;&amp; (interacted == 0) {
-        global.interactionTimer = 30;
+        global.interactionTimer = global.interactionTimerMax;
         global.interacting = 1;
         global.paused = 1;
-        interacted = 1;
         global.cursorPosition = 0;
+        
+        interacted = 1;
         sprite_index = spr_interacted;
-        global.interactionText = interactionText;
     }
 }
 
-if (gpInteract || keyInteract) &amp;&amp; (global.interactionTimer != 0) &amp;&amp; (interacted == 1) {
+if (gpInteract || keyInteract) &amp;&amp; (global.interactionTimer == 0) &amp;&amp; (interacted == 1) {
     global.paused = 0;
     global.interacting = 0;
     global.interactionText = "";
@@ -186,16 +186,54 @@ if (global.interacting &amp;&amp; global.paused) &amp;&amp; place_meeting(x, y, 
             <string>/// Dialog choice
 draw_set_font(font_ISO400);
 
+dialogPosition = sign(global.playerx - view_xview[0]);
+
+
 if (interacted == 0) {
     draw_sprite(spr_interaction, 0, x, y);
 }
 
-if global.paused &amp;&amp; global.interacting &amp;&amp; place_meeting(x, y, obj_player) {
-    for (i = 0; i &lt; array_length_1d(choices); i++) {
-        draw_set_halign(fa_left);
-        draw_text(room_width / 2, room_height / 2 + (36 * i), choices[i]);
+if (place_meeting(x, y, obj_player) &amp;&amp; interacted == 0) {
+    global.interactionText = interactionText;
+    // Draw Prompt Bubble
+    if dialogPosition == 1 {
+        draw_sprite(spr_promptBubbleLeft, 0, x + (dialogPosition * global.interactBubbleX), global.interactBubbleY);
     }
-    draw_sprite(spr_cursor, 0, room_width / 2 - spr_cursor.sprite_width - 16, room_height / 2 + (36 * global.cursorPosition));
+    if dialogPosition == -1 {
+        draw_sprite(spr_promptBubbleRight, 0, x + (dialogPosition * global.interactBubbleX), global.interactBubbleY);
+    }
+    
+    // Draw Prompt Text
+    draw_set_color(c_black)
+    draw_set_halign(fa_left);
+    draw_text_ext(x + (-dialogPosition * global.interactTextX), y - (sprite_get_height(spr_PlayerStandingRight) / 2) - global.interactTextY, global.interactionText, -1, sprite_get_width(spr_promptBubbleRight) - 20);
+}  
+
+if global.paused &amp;&amp; global.interacting &amp;&amp; place_meeting(x, y, obj_player) {
+    draw_set_color(c_black)
+    draw_set_halign(fa_left);
+    
+    // Draw Player Bubble
+    if dialogPosition == 1 {
+        draw_sprite(spr_playerSpeechLeft, 0, global.playerx + (dialogPosition * global.bubbleX), global.bubbleY);
+    }
+    if dialogPosition == -1 {
+        draw_sprite(spr_playerSpeechRight, 0, global.playerx + (dialogPosition * global.bubbleX), global.bubbleY);
+    }
+    
+    // Draw Player Text
+    for (i = 0; i &lt; array_length_1d(choices); i++) {
+        if (i == global.cursorPosition) {
+            draw_set_color(c_red);
+        } else {
+            draw_set_color(c_black)
+        }
+        draw_set_halign(fa_left);
+        draw_text_ext(global.playerx + (dialogPosition * global.textX), (60 * i) + global.playery - (sprite_get_height(spr_PlayerStandingRight) / 2) - global.textY, choices[i], -1, sprite_get_width(spr_playerSpeechRight) - 30);
+    }
+    
+    // Draw Cursor
+    draw_sprite(spr_cursor, 1, global.playerx + (dialogPosition * global.textX) - sprite_get_width(spr_cursor) - 16, global.playery - (sprite_get_height(spr_PlayerStandingRight) / 2) - global.textY + (60 * global.cursorPosition));
 }
 </string>
           </argument>
