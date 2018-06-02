@@ -153,6 +153,7 @@ if (gpaxis &lt; 0.1) &amp;&amp; (gpaxis &gt; -0.1) {
 
 if global.interacting &amp;&amp; place_meeting(x, y, obj_player) {
     if (gpdown || keydown || gadown) {
+        audio_play_sound(sd_cursor, 0, false);
         global.cursorPosition++;
         if global.cursorPosition &gt; array_length_1d(choices) - 1 {
             global.cursorPosition = 0;
@@ -160,6 +161,7 @@ if global.interacting &amp;&amp; place_meeting(x, y, obj_player) {
     }
     
     if (gpup || keyup || gaup) {
+        audio_play_sound(sd_cursor, 0, false);
         global.cursorPosition--;
         if global.cursorPosition &lt; 0 {
             global.cursorPosition = array_length_1d(choices) - 1;

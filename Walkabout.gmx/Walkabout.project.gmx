@@ -16,6 +16,8 @@
     </sounds>
     <sound>sound\sd_teleport</sound>
     <sound>sound\sd_slide</sound>
+    <sound>sound\music_menu</sound>
+    <sound>sound\sd_cursor</sound>
   </sounds>
   <sprites name="sprites">
     <sprite>sprites\spr_TimeCopRight</sprite>
