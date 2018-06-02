@@ -11,6 +11,7 @@
     <sprite>sprites\spr_PlayerRight</sprite>
     <sprite>sprites\spr_PlayerLeft</sprite>
     <sprite>sprites\spr_PlayerStanding</sprite>
+    <sprite>sprites\spr_PlayerGameOver</sprite>
     <sprite>sprites\spr_PlayerStandingLeft</sprite>
     <sprite>sprites\spr_PlayerStandingRight</sprite>
     <sprite>sprites\spr_TeleportRight</sprite>
@@ -47,6 +48,7 @@
     <object>objects\obj_interactable</object>
     <object>objects\obj_ScaleController</object>
     <object>objects\obj_GameController</object>
+    <object>objects\obj_GameOverController</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_menu</room>
@@ -55,6 +57,7 @@
     <room>rooms\rm_contemporary</room>
     <room>rooms\rm_nearpast</room>
     <room>rooms\rm_distantpast</room>
+    <room>rooms\rm_gameover</room>
   </rooms>
   <help>
     <rtf>help.rtf</rtf>

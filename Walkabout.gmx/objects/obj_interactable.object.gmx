@@ -90,6 +90,7 @@ if place_meeting(x, y, obj_player) {
         global.cursorPosition = 0;
         
         interacted = 1;
+        global.interactCount++;
         sprite_index = spr_interacted;
     }
 }

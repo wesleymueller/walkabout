@@ -29,9 +29,11 @@
 
 global.time = 1;
 global.paused = 0;
+global.gameOver = 0;
 global.debug = 0;
 
-global.jumpTime = 300;
+global.jumpTimeMax = 300;
+global.jumpTime = global.jumpTimeMax;
 global.copSpawned = 0;
 
 global.paused = 0;
@@ -63,6 +65,8 @@ global.interactBubbleY = 550;
 global.interactTextY = 30;
 global.interactBubbleX = -309;
 global.interactTextX = 365;
+
+global.interactCount = 0;
 </string>
           </argument>
         </arguments>
@@ -135,11 +139,17 @@ if !global.startRoom {
     global.teleporting = 0;
     global.barf = 1;
     global.barfTimer = global.barfTimerMax;
+    
+    global.copSpawned = 0
+    global.jumpTime = global.jumpTimeMax;
+    
     instance_create(global.playerx, global.playery, obj_player);
     obj_player.sprite_index = spr_PlayerBarf;
     view_xview[0] = (obj_player.x - (view_wview[0] / 2) - view_xview[0]);
     view_xview[0] = clamp(view_xview[0], 0, room_width - view_wview[0]);
 }
+
+
 </string>
           </argument>
         </arguments>
@@ -260,7 +270,7 @@ check_pad_left = -gamepad_button_check(0, gp_padl);
 check_pad_right = gamepad_button_check(0, gp_padr);
 
 
-if !global.paused {
+if !global.paused &amp;&amp; !global.gameOver {
     if (check_haxis &gt; 0.1) {
         pad_haxis = 1;
     } 
@@ -296,7 +306,7 @@ if !global.paused {
           <argument>
             <kind>1</kind>
             <string>/// Move player
-if !global.paused &amp;&amp; !global.barf {
+if !global.paused &amp;&amp; !global.barf &amp;&amp; !global.gameOver {
 
     if (hdir != 0) {
         moveSpeed += playerAccel * hdir
@@ -345,7 +355,7 @@ if global.barf {
             <kind>1</kind>
             <string>/// Set sprite
 
-if !global.paused &amp;&amp; !global.barf &amp;&amp; !global.teleporting {
+if !global.paused &amp;&amp; !global.barf &amp;&amp; !global.teleporting &amp;&amp; !global.gameOver {
     if (hdir &lt; 0) {
         obj_player.sprite_index = spr_PlayerLeft;
     }
@@ -383,6 +393,10 @@ if global.teleporting {
         obj_player.sprite_index = spr_TeleportRight;
     }
 }
+
+if global.gameOver {
+    obj_player.sprite_index = spr_PlayerGameOver;
+}
 </string>
           </argument>
         </arguments>
@@ -410,7 +424,7 @@ gp_Future = gamepad_button_check_pressed(0, gp_face3);
 key_Past = keyboard_check_pressed(ord('X'));
 key_Future = keyboard_check_pressed(ord('C'));
 
-if !global.paused {
+if !global.paused &amp;&amp; !global.gameOver {
     if (global.teleportCooldown == 0) {
         
         if (gp_Past || key_Past) {
@@ -556,6 +570,36 @@ if keyboard_check(vk_escape) {
           </argument>
         </arguments>
       </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Cop Catches Player
+
+if (global.copSpawned == 1) &amp;&amp; (abs(obj_TimeCop.x - obj_player.x) &lt; (obj_TimeCop.sprite_width / 2)) {
+    global.gameOver = 1;
+}
+
+if (obj_player.sprite_index == spr_PlayerGameOver) &amp;&amp; (obj_player.image_index &gt;= obj_player.image_number - 1) {
+    room_goto(rm_gameover);
+    instance_destroy();
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
     </event>
     <event eventtype="8" enumb="64">
       <action>
@@ -587,6 +631,7 @@ if (global.debug) {
     draw_text(16, 16 * 6, "Teleport Cooldown: " + string(global.teleportCooldown));
     draw_text(16, 16 * 7, "Move Speed: " + string(moveSpeed));
     draw_text(16, 16 * 9, "Room: " + string(room));
+    draw_text(16, 16 * 10, "Interactions: " + string(global.interactCount));
     
     draw_set_halign(fa_right);
     draw_text(view_wview - 16, 16, "Interact Gamepad: " + string(obj_interactable.gpInteract));
