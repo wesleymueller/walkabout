@@ -27,7 +27,7 @@
             <kind>1</kind>
             <string>/// Initialize variables
 
-interacted = 0;
+// interacted = 0;
 </string>
           </argument>
         </arguments>
@@ -86,7 +86,7 @@ if place_meeting(x, y, obj_player) {
     if (gpInteract || keyInteract) &amp;&amp; (interacted == 0) {
         global.interactionTimer = global.interactionTimerMax;
         global.interacting = 1;
-        global.paused = 1;
+//        global.paused = 1;
         global.cursorPosition = 0;
         
         interacted = 1;
@@ -96,7 +96,7 @@ if place_meeting(x, y, obj_player) {
 }
 
 if (gpInteract || keyInteract) &amp;&amp; (global.interactionTimer == 0) &amp;&amp; (interacted == 1) {
-    global.paused = 0;
+//    global.paused = 0;
     global.interacting = 0;
     global.interactionText = "";
 }
@@ -147,7 +147,7 @@ if (gpaxis &lt; 0.1) &amp;&amp; (gpaxis &gt; -0.1) {
     gadown = 0;
     axishold = 0;
 }
-if (global.interacting &amp;&amp; global.paused) &amp;&amp; place_meeting(x, y, obj_player) {
+if global.interacting &amp;&amp; place_meeting(x, y, obj_player) {
     if (gpdown || keydown || gadown) {
         global.cursorPosition++;
         if global.cursorPosition &gt; array_length_1d(choices) - 1 {
@@ -210,7 +210,7 @@ if (place_meeting(x, y, obj_player) &amp;&amp; interacted == 0) {
     draw_text_ext(x + (-dialogPosition * global.interactTextX), y - (sprite_get_height(spr_PlayerStandingRight) / 2) - global.interactTextY, global.interactionText, -1, sprite_get_width(spr_promptBubbleRight) - 20);
 }  
 
-if global.paused &amp;&amp; global.interacting &amp;&amp; place_meeting(x, y, obj_player) {
+if global.interacting &amp;&amp; place_meeting(x, y, obj_player) {
     draw_set_color(c_black)
     draw_set_halign(fa_left);
     

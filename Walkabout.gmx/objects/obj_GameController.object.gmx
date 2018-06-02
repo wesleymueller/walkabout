@@ -67,6 +67,13 @@ global.interactBubbleX = -309;
 global.interactTextX = 365;
 
 global.interactCount = 0;
+
+global.interactions[rm_contemporary, 0] = 0;
+global.interactions[rm_contemporary, 1] = 0;
+global.interactions[rm_distantpast, 0] = 0;
+global.interactions[rm_distantpast, 1] = 0;
+global.interactions[rm_nearpast, 0] = 0;
+global.interactions[rm_nearpast, 1] = 0;
 </string>
           </argument>
         </arguments>
@@ -270,7 +277,7 @@ check_pad_left = -gamepad_button_check(0, gp_padl);
 check_pad_right = gamepad_button_check(0, gp_padr);
 
 
-if !global.paused &amp;&amp; !global.gameOver {
+if !global.paused &amp;&amp; !global.gameOver &amp;&amp; !global.interacting {
     if (check_haxis &gt; 0.1) {
         pad_haxis = 1;
     } 
@@ -306,7 +313,7 @@ if !global.paused &amp;&amp; !global.gameOver {
           <argument>
             <kind>1</kind>
             <string>/// Move player
-if !global.paused &amp;&amp; !global.barf &amp;&amp; !global.gameOver {
+if !global.paused &amp;&amp; !global.barf &amp;&amp; !global.gameOver &amp;&amp; !global.interacting {
 
     if (hdir != 0) {
         moveSpeed += playerAccel * hdir
@@ -427,14 +434,14 @@ key_Future = keyboard_check_pressed(ord('C'));
 if !global.paused &amp;&amp; !global.gameOver {
     if (global.teleportCooldown == 0) {
         
-        if (gp_Past || key_Past) {
+        if (gp_Past || key_Past) &amp;&amp; !global.interacting {
             global.teleportDirection = -1;
             if !((global.currentRoom + global.teleportDirection &gt; 2) || (global.currentRoom + global.teleportDirection &lt; 0)) {
                 global.teleporting = 1;
             }
         }
         
-        if (gp_Future || key_Future) {
+        if (gp_Future || key_Future) &amp;&amp; !global.interacting {
             global.teleportDirection = 1;
             if !((global.currentRoom + global.teleportDirection &gt; 2) || (global.currentRoom + global.teleportDirection &lt; 0)) {
                 global.teleporting = 1;
