@@ -27,13 +27,9 @@
             <kind>1</kind>
             <string>///Initialize
 
-global.menu[0, 0] = "New Game";
-global.menu[0, 1] = 1;
-//global.menu[0, 2] = rm_graybox;
-
-global.menu[1, 0] = "Graybox";
-global.menu[1, 1] = 1;
-global.menu[1, 2] = rm_contemporary;
+global.menu[0] = "New Game";
+global.menu[1] = "Graybox";
+global.menu[2] = "Exit Game";
 
 global.cursorPosition = 0;
 
@@ -129,8 +125,13 @@ gpSelectMenu = gamepad_button_check_pressed(0, gp_face1);
 keySelectMenu = keyboard_check_pressed(vk_enter);
 
 if gpSelectMenu || keySelectMenu {
-    if global.menu[global.cursorPosition, 1] = 1 {
-        room_goto(global.menu[global.cursorPosition, 2]);
+    switch (global.cursorPosition) {
+        case 0: room_goto(rm_contemporary);
+                break;
+        case 1: room_goto(rm_graybox);
+                break;
+        case 2: game_end();
+                break;
     }
 }
 </string>
@@ -186,8 +187,13 @@ draw_set_halign(fa_center);
 draw_set_valign(fa_middle);
 draw_set_color(c_white);
 
-for (i = 0; i &lt; array_length_1d(global.menu); i++) {    
-    draw_text(room_width / 2, room_height / 2 + (global.menuHeight * i), global.menu[i, 0]);
+for (i = 0; i &lt; array_length_1d(global.menu); i++) {  
+    if (global.cursorPosition == i) {
+        draw_set_color(c_red);  
+    }  else {
+        draw_set_color(c_white);
+    }
+    draw_text(room_width / 2, room_height / 2 + (global.menuHeight * i), global.menu[i]);
 }
 
 draw_sprite(spr_cursor, 0, room_width / 2 - 100, room_height / 2 + (global.menuHeight * global.cursorPosition));
