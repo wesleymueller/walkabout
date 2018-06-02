@@ -151,6 +151,8 @@ if !global.startRoom {
     global.jumpTime = global.jumpTimeMax;
     
     instance_create(global.playerx, global.playery, obj_player);
+    obj_copSpawn.x = global.playerx;
+    obj_copSpawn.y = global.playery;
     obj_player.sprite_index = spr_PlayerBarf;
     view_xview[0] = (obj_player.x - (view_wview[0] / 2) - view_xview[0]);
     view_xview[0] = clamp(view_xview[0], 0, room_width - view_wview[0]);
@@ -380,6 +382,9 @@ if !global.paused &amp;&amp; !global.barf &amp;&amp; !global.teleporting &amp;&a
         }
     }
     if (sign(lastSpeed) != sign(hdir)) {
+        if !audio_is_playing(sd_slide) {
+            audio_play_sound(sd_slide, 0, false);
+        }
         if (hdir == -1) {
             obj_player.sprite_index = spr_PlayerStandingRight; 
         }
@@ -387,6 +392,10 @@ if !global.paused &amp;&amp; !global.barf &amp;&amp; !global.teleporting &amp;&a
             obj_player.sprite_index = spr_PlayerStandingLeft;
         }
     }
+}
+
+if (sign(lastSpeed) == sign(hdir)) &amp;&amp; (audio_is_playing(sd_slide)) {
+    audio_stop_sound(sd_slide);
 }
 
 if global.teleporting {
@@ -437,6 +446,7 @@ if !global.paused &amp;&amp; !global.gameOver {
         if (gp_Past || key_Past) &amp;&amp; !global.interacting {
             global.teleportDirection = -1;
             if !((global.currentRoom + global.teleportDirection &gt; 2) || (global.currentRoom + global.teleportDirection &lt; 0)) {
+                audio_play_sound(sd_teleport, 1, false);
                 global.teleporting = 1;
             }
         }
@@ -444,6 +454,7 @@ if !global.paused &amp;&amp; !global.gameOver {
         if (gp_Future || key_Future) &amp;&amp; !global.interacting {
             global.teleportDirection = 1;
             if !((global.currentRoom + global.teleportDirection &gt; 2) || (global.currentRoom + global.teleportDirection &lt; 0)) {
+                audio_play_sound(sd_teleport, 1, false);
                 global.teleporting = 1;
             }
         }

@@ -36,6 +36,8 @@ global.cursorPosition = 0;
 global.menuHeight = 36;
 
 draw_set_font(font_ISO400)
+
+axisHold = 0;
 </string>
           </argument>
         </arguments>
@@ -59,7 +61,6 @@ draw_set_font(font_ISO400)
           <argument>
             <kind>1</kind>
             <string>/// Move Cursor
-
 gpdown = gamepad_button_check_pressed(0, gp_padd);
 gpup = gamepad_button_check_pressed(0, gp_padu);
 keydown = keyboard_check_pressed(vk_down);
@@ -68,22 +69,21 @@ gpaxis = gamepad_axis_value(0, gp_axislv);
 gadown = 0;
 gaup = 0;
 
-axishold = 0;
 
-if (gpaxis &gt; 0.1) &amp;&amp; (axishold == 0) {
-    axishold = 1;
-    gaup = 1;
-
-    
-}
-if (gpaxis &lt; -0.1) &amp;&amp; (axishold == 0) {
-    axishold = 1;
+if (gpaxis &gt; 0.1) &amp;&amp; (axisHold == 0) {
+    axisHold = 1;
     gadown = 1;
 }
+
+if (gpaxis &lt; -0.1) &amp;&amp; (axisHold == 0) {
+    axisHold = 1;
+    gaup = 1;
+}
+
 if (gpaxis &lt; 0.1) &amp;&amp; (gpaxis &gt; -0.1) {
     gaup = 0;
     gadown = 0;
-    axishold = 0;
+    axisHold = 0;
 }
 
 if (gpdown || keydown || gadown) {

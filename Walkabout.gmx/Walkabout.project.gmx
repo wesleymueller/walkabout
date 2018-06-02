@@ -4,7 +4,19 @@
     <Config>Configs\Default</Config>
   </Configs>
   <NewExtensions/>
-  <sounds name="sound"/>
+  <sounds name="sound">
+    <sounds name="Footsteps">
+      <sound>sound\sd_footsteps00</sound>
+      <sound>sound\sd_footsteps01</sound>
+      <sound>sound\sd_footsteps02</sound>
+      <sound>sound\sd_footsteps03</sound>
+      <sound>sound\sd_footsteps04</sound>
+      <sound>sound\sd_footsteps05</sound>
+      <sound>sound\sd_footsteps06</sound>
+    </sounds>
+    <sound>sound\sd_teleport</sound>
+    <sound>sound\sd_slide</sound>
+  </sounds>
   <sprites name="sprites">
     <sprite>sprites\spr_TimeCopRight</sprite>
     <sprite>sprites\spr_TimeCopLeft</sprite>
@@ -24,6 +36,7 @@
     <sprite>sprites\spr_playerSpeechRight</sprite>
     <sprite>sprites\spr_promptBubbleRight</sprite>
     <sprite>sprites\spr_promptBubbleLeft</sprite>
+    <sprite>sprites\spr_TimeTear</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\bg_Graybox</background>

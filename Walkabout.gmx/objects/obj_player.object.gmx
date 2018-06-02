@@ -8,6 +8,39 @@
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
+    <event eventtype="0" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Footsteps Array
+
+footsteps[0] = sd_footsteps00
+footsteps[1] = sd_footsteps01
+footsteps[2] = sd_footsteps02
+footsteps[3] = sd_footsteps03
+footsteps[4] = sd_footsteps04
+footsteps[5] = sd_footsteps05
+footsteps[6] = sd_footsteps06
+
+thisFootstep = round(random_range(0, 6));
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="3" enumb="0">
       <action>
         <libid>1</libid>
@@ -29,6 +62,32 @@
 
 if !place_meeting(x, y, obj_interactable) {
     global.interactionText = "";
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Footstep Sounds
+
+if ((sprite_index == spr_PlayerRight) || (sprite_index == spr_PlayerLeft)) &amp;&amp; ((image_index == 2) || (image_index == 11)) {
+    audio_play_sound(footsteps[thisFootstep], 0, false);
+    thisFootstep = round(random_range(0, 6));
 }
 </string>
           </argument>

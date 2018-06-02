@@ -28,6 +28,8 @@
             <string>/// Initialize variables
 
 // interacted = 0;
+
+axishold = 0;
 </string>
           </argument>
         </arguments>
@@ -90,6 +92,7 @@ if place_meeting(x, y, obj_player) {
         global.cursorPosition = 0;
         
         interacted = 1;
+        global.interactions[room, interactionNumber] = 1;
         global.interactCount++;
         sprite_index = spr_interacted;
     }
@@ -130,23 +133,24 @@ gpaxis = gamepad_axis_value(0, gp_axislv);
 gadown = 0;
 gaup = 0;
 
-axishold = 0;
+
 
 if (gpaxis &gt; 0.1) &amp;&amp; (axishold == 0) {
     axishold = 1;
-    gaup = 1;
+    gadown = 1;
 
     
 }
 if (gpaxis &lt; -0.1) &amp;&amp; (axishold == 0) {
     axishold = 1;
-    gadown = 1;
+    gaup = 1;
 }
 if (gpaxis &lt; 0.1) &amp;&amp; (gpaxis &gt; -0.1) {
     gaup = 0;
     gadown = 0;
     axishold = 0;
 }
+
 if global.interacting &amp;&amp; place_meeting(x, y, obj_player) {
     if (gpdown || keydown || gadown) {
         global.cursorPosition++;
@@ -192,6 +196,10 @@ dialogPosition = sign(global.playerx - view_xview[0]);
 
 if (interacted == 0) {
     draw_sprite(spr_interaction, 0, x, y);
+}
+
+if (interacted == 1) {
+    draw_sprite(spr_interacted, 0, x, y);
 }
 
 if (place_meeting(x, y, obj_player) &amp;&amp; interacted == 0) {
