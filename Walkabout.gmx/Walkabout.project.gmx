@@ -18,6 +18,8 @@
     <sound>sound\sd_slide</sound>
     <sound>sound\music_menu</sound>
     <sound>sound\sd_cursor</sound>
+    <sound>sound\music_game</sound>
+    <sound>sound\sd_transition</sound>
   </sounds>
   <sprites name="sprites">
     <sprite>sprites\spr_TimeCopRight</sprite>
@@ -64,6 +66,7 @@
     <object>objects\obj_ScaleController</object>
     <object>objects\obj_GameController</object>
     <object>objects\obj_GameOverController</object>
+    <object>objects\obj_TransitionController</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_menu</room>
@@ -73,6 +76,7 @@
     <room>rooms\rm_nearpast</room>
     <room>rooms\rm_distantpast</room>
     <room>rooms\rm_gameover</room>
+    <room>rooms\rm_transition</room>
   </rooms>
   <help>
     <rtf>help.rtf</rtf>

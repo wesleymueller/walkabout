@@ -27,6 +27,12 @@
             <kind>1</kind>
             <string>/// Initialize
 
+if audio_is_playing(music_menu) {
+   audio_stop_sound(music_menu) 
+}
+
+audio_play_sound(music_game, 0, true);
+
 global.time = 1;
 global.paused = 0;
 global.gameOver = 0;
